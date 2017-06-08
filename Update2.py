@@ -13,7 +13,6 @@ import RPi.GPIO as GPIO
 
 from plotly.graph_objs import Scatter, Layout, Figure
 from plotly import tools
-from plotly.graph_objs import Scatter, Layout
 from datetime import datetime
 from MAX31865 import MAX31865, MAX31865Error
 
@@ -145,7 +144,7 @@ def streamer(pin, rate):
             token=stream_token_3,
             maxpoints=100
         ),
-        name = 'Sensor 1'
+        name = 'Sensor 3'
     )
 
     trace4 = Scatter(
@@ -155,7 +154,7 @@ def streamer(pin, rate):
             token=stream_token_4,
             maxpoints = 100
             ),
-        name = 'Sensor 2'
+        name = 'Sensor 4'
     )
     
     layout = Layout(
