@@ -3,6 +3,7 @@ CraVis: Cross-Platform Data Visualization System
 A cross-platform temperature monitoring system for Ge and cryogenic NaI/Csi detectors developed in the radiation detector laboratory.
 
 Look how easy it is to use:
+---------------------
 
 1)	Clone or download the entire project to your computer. 
 2)	Make sure you have all your temperature sensors are correctly connected to the MAX31865PMB1 board.
