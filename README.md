@@ -2,6 +2,15 @@ CraVis: Cross-Platform Data Visualization System
 ========
 A cross-platform temperature monitoring system for Ge and cryogenic NaI/Csi detectors developed in the radiation detector laboratory.
 
+![CraViS - Room Temperature measurement of our NaI/CsI detector](https://lh3.googleusercontent.com/_x7hzkfzrqUOX9qRsq2c9ae4rtDmp2ebJWi9-cpa79rGmHJGGVuRS6wNwmFn_Z-WI8eX3wCHrmSVNfY=w1920-h901-rw "CraViS - Room Temperature measurement of our NaI/CsI detector")
+
+Multiple MAX31865PMB1 hardware setup                |  Single MAX31865PMB1 hardware setup
+:-------------------------:|:-------------------------:
+![CraViS - Multiple MAX31865PMB1 hardware setup](https://lh3.googleusercontent.com/VSQ6lw1lu_EShYeYmo-n2oZSlEGxHlHIYW9NSZJDThhXCqeuFwT_lH83bj5hBdCFHiDaIVqzioBGYXE=w1920-h901 "CraViS - Multiple MAX31865PMB1 hardware setup")  | ![CraViS - Single MAX31865PMB1 hardware setup](https://lh4.googleusercontent.com/nvWdiGBZ3l_z-XOyHxS9gaceCPEayHE4le8eLeI5aNHm8ZXhHmv4Xsaw7JQTafaioDFff2tCkUU_rRA=w1920-h901 "CraViS - Single MAX31865PMB1 hardware setup")
+
+
+
+
 Look how easy it is to use:
 ---------------------
 
