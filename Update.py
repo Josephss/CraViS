@@ -105,6 +105,38 @@ def getTemperature(cs_arr):
         temperature = data.split()
     return temperature
 
+def offilne(pin, rate):
+
+    print("Saving data locally ... Press Ctrl + C to terminate.")
+    
+    looper = True
+    while(looper):
+            try:
+                temp1_data = getTemperature(pin[0])
+                temp = temp1_data[2]
+
+                temp2_data = getTemperature(pin[1])
+                temp2 = temp2_data[2]
+
+                temp3_data = getTemperature(pin[2])
+                temp3 = temp3_data[2]
+                
+                temp4_data = getTemperature(pin[3])
+                temp4 = temp4_data[2]
+
+                currentTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')            
+                
+                fileWrite(currentTime, temp, 'sensor01')
+                fileWrite(currentTime, temp2, 'sensor02')
+                fileWrite(currentTime, temp3, 'sensor03')
+                fileWrite(currentTime, temp4, 'sensor04')
+                time.sleep(rate)
+            except KeyboardInterrupt:
+                print("Terminating ...")
+                GPIO.cleanup()
+                looper = False
+    return
+
 def streamer(pin, rate):
 
     print("Streaming ... Press Ctrl + C to terminate.")
@@ -237,8 +269,8 @@ def streamer(pin, rate):
                 print("Terminating streaming ...")
                 GPIO.cleanup()
                 looper = False
-    return
-
+	return
+	
 def terminate():
     print("Terminating ..")
     for thread in Thread.enumerate():
@@ -256,7 +288,9 @@ def statusCheck(temp1, temp2):
 
     
 def main():
-    streamer([[8],[24], [25], [4]], 2)
+	#TODO: check internet connection
+	#if yes, call streamer. Else, call offline
+    offline([[8],[24], [25], [4]], 2)
 
 if __name__ == "__main__":
     main()
