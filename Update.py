@@ -104,28 +104,23 @@ def getTemperature(cs_arr):
         data = rtd.convert(code)
         temperature = data.split()
     return temperature
-
-def offilne(pin, rate):
-
-    print("Saving data locally ... Press Ctrl + C to terminate.")
     
+# Takes in an array of MAX31865PMB1 pin 6 locations and saves their temperature output to individual CSV files
+def offilne(pin, rate):
+    print("Saving data locally ... Press Ctrl + C to terminate.")
+   
     looper = True
     while(looper):
             try:
                 temp1_data = getTemperature(pin[0])
                 temp = temp1_data[2]
-
                 temp2_data = getTemperature(pin[1])
                 temp2 = temp2_data[2]
-
                 temp3_data = getTemperature(pin[2])
-                temp3 = temp3_data[2]
-                
+                temp3 = temp3_data[2]            
                 temp4_data = getTemperature(pin[3])
                 temp4 = temp4_data[2]
-
-                currentTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')            
-                
+                currentTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')                      
                 fileWrite(currentTime, temp, 'sensor01')
                 fileWrite(currentTime, temp2, 'sensor02')
                 fileWrite(currentTime, temp3, 'sensor03')
