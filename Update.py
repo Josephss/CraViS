@@ -106,7 +106,7 @@ def getTemperature(cs_arr):
     return temperature
     
 # Takes in an array of MAX31865PMB1 pin 6 locations and saves their temperature output to individual CSV files
-def offilne(pin, rate):
+def offline(pin, rate):
     print("Saving data locally ... Press Ctrl + C to terminate.")
    
     looper = True
@@ -264,7 +264,7 @@ def streamer(pin, rate):
                 print("Terminating streaming ...")
                 GPIO.cleanup()
                 looper = False
-	return
+    return
 	
 def terminate():
     print("Terminating ..")
@@ -285,7 +285,7 @@ def statusCheck(temp1, temp2):
 def main():
 	#TODO: check internet connection
 	#if yes, call streamer. Else, call offline
-    offline([[8],[24], [25], [4]], 2)
+    offline([[8],[4], [25], [24]], 2)
 
 if __name__ == "__main__":
     main()
