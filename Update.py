@@ -6,6 +6,7 @@ import time, sched
 import SimpleHTTPServer
 import SocketServer
 import threading
+import urllib
 
 import numpy as np
 import plotly.plotly as py
@@ -281,11 +282,21 @@ def statusCheck(temp1, temp2):
         GPIO.output(20, GPIO.LOW)
     GPIO.cleanup()
 
+#Check internet connection:     
+def connected(host='http://google.com'):
+    try:
+        urllib.urlopen(host)
+        return True
+    except:
+        return False
     
 def main():
-	#TODO: check internet connection
-	#if yes, call streamer. Else, call offline
-    offline([[8],[4], [25], [24]], 2)
+    # Stream to a plotly server if there is an internet connection
+    # otherwise, save locally
+    if(connected()):
+        streamer([[8],[4], [25], [24]], 2)
+    else:
+        offline([[8],[4], [25], [24]], 2)
 
 if __name__ == "__main__":
     main()
