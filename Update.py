@@ -6,6 +6,7 @@ import time, sched
 import SimpleHTTPServer
 import SocketServer
 import threading
+import urllib
 
 import numpy as np
 import plotly.plotly as py
@@ -104,6 +105,33 @@ def getTemperature(cs_arr):
         data = rtd.convert(code)
         temperature = data.split()
     return temperature
+    
+# Takes in an array of MAX31865PMB1 pin 6 locations and saves their temperature output to individual CSV files
+def offline(pin, rate):
+    print("Saving data locally ... Press Ctrl + C to terminate.")
+   
+    looper = True
+    while(looper):
+            try:
+                temp1_data = getTemperature(pin[0])
+                temp = temp1_data[2]
+                temp2_data = getTemperature(pin[1])
+                temp2 = temp2_data[2]
+                temp3_data = getTemperature(pin[2])
+                temp3 = temp3_data[2]            
+                temp4_data = getTemperature(pin[3])
+                temp4 = temp4_data[2]
+                currentTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')                      
+                fileWrite(currentTime, temp, 'sensor01')
+                fileWrite(currentTime, temp2, 'sensor02')
+                fileWrite(currentTime, temp3, 'sensor03')
+                fileWrite(currentTime, temp4, 'sensor04')
+                time.sleep(rate)
+            except KeyboardInterrupt:
+                print("Terminating ...")
+                GPIO.cleanup()
+                looper = False
+    return
 
 def streamer(pin, rate):
 
@@ -238,7 +266,7 @@ def streamer(pin, rate):
                 GPIO.cleanup()
                 looper = False
     return
-
+	
 def terminate():
     print("Terminating ..")
     for thread in Thread.enumerate():
@@ -254,9 +282,21 @@ def statusCheck(temp1, temp2):
         GPIO.output(20, GPIO.LOW)
     GPIO.cleanup()
 
+#Check internet connection:     
+def connected(host='http://google.com'):
+    try:
+        urllib.urlopen(host)
+        return True
+    except:
+        return False
     
 def main():
-    streamer([[8],[24], [25], [4]], 2)
+    # Stream to a plotly server if there is an internet connection
+    # otherwise, save locally
+    if(connected()):
+        streamer([[8],[4], [25], [24]], 2)
+    else:
+        offline([[8],[4], [25], [24]], 2)
 
 if __name__ == "__main__":
     main()
