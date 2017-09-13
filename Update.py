@@ -18,9 +18,6 @@ from datetime import datetime
 from MAX31865 import MAX31865, MAX31865Error
 
 
-#Store the time and temp values in separate arrays
-Time = []
-temp = []
 
 def isFloat(s):
     try: 
@@ -29,31 +26,42 @@ def isFloat(s):
     except ValueError:
         return False
     
-def csvReader(fileName):
-    #flush out the existing data of Time and temp before updating the updated data to the html
-    del Time[:]
-    del temp[:]
-    #read in the CSV and store it in a huge array
-    f = open(fileName)
-    csv_f = csv.reader(f)
-    for row in csv_f:
-        if(row != -1):
-            Time.append(row[0])
-            if(isFloat(row[1]) == True):
-                temp.append(float(row[1]))
-    return
+def csvReader(fileNameArr):
+    n = len(fileNameArr) 
+    #Store the time and temp values in a multi-dimentional array
+    time_temp = [[] for index in range(0,n*2)]
+    for i in range(n):
+        #read in the CSV and store it in a huge array
+        f = open(fileNameArr[i])
+        csv_f = csv.reader(f)
+        for row in csv_f:
+            if(row != -1):
+                if(i>=1):
+                    time_temp[i+i].append(row[0])
+                    if(isFloat(row[1]) == True):
+                        time_temp[i+i+1].append(float(row[1]))
+                else:
+                    time_temp[i].append(row[0])
+                    if(isFloat(row[1]) == True):
+                        time_temp[i+1].append(float(row[1]))
+    return time_temp
 
 #Graph the temperature data to an HTML file (temperature.html) using the plotly library
 def grapher(rate):
     looper = True
     while(looper):
             try:
-                csvReader('data.csv')
-                trace0 = Scatter(x=Time, y=temp, name ="Detector 1")
-                trace1 = Scatter(x=Time, y=temp, name ="Detector 2 ")
-                fig = tools.make_subplots(rows=2, cols=1)
+                time_temp = csvReader(['sensor01.csv','sensor02.csv','sensor03.csv','sensor04.csv'])[:]
+                trace0 = Scatter(x=time_temp[0], y=time_temp[1], name ="Detector 1")             
+                trace1 = Scatter(x=time_temp[2], y=time_temp[3], name ="Detector 2")                
+                trace2 = Scatter(x=time_temp[4], y=time_temp[5], name ="Detector 3")                
+                trace3 = Scatter(x=time_temp[6], y=time_temp[7], name ="Detector 4")
+                
+                fig = tools.make_subplots(rows=2, cols=2)
                 fig.append_trace(trace0, 1, 1)
-                fig.append_trace(trace1, 2, 1)
+                fig.append_trace(trace1, 1, 2)
+                fig.append_trace(trace2, 2, 1)
+                fig.append_trace(trace3, 2, 2)
                 plotly.offline.plot(fig, filename = "temperature" + ".html", auto_open=False, show_link=False)
                 time.sleep(rate)
             except KeyboardInterrupt:
@@ -109,24 +117,18 @@ def getTemperature(cs_arr):
 # Takes in an array of MAX31865PMB1 pin 6 locations and saves their temperature output to individual CSV files
 def offline(pin, rate):
     print("Saving data locally ... Press Ctrl + C to terminate.")
-   
     looper = True
     while(looper):
             try:
-                temp1_data = getTemperature(pin[0])
-                temp = temp1_data[2]
-                temp2_data = getTemperature(pin[1])
-                temp2 = temp2_data[2]
-                temp3_data = getTemperature(pin[2])
-                temp3 = temp3_data[2]            
-                temp4_data = getTemperature(pin[3])
-                temp4 = temp4_data[2]
-                currentTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')                      
-                fileWrite(currentTime, temp, 'sensor01')
-                fileWrite(currentTime, temp2, 'sensor02')
-                fileWrite(currentTime, temp3, 'sensor03')
-                fileWrite(currentTime, temp4, 'sensor04')
+                n = len(pin) # number of pins
+                temperature_data_arr = []
+                for i in range(n): # collect the temperature data in an array
+                    temperature_data_arr.append(getTemperature(pin[i])[2])
+                for j in range(n): # save the collected data to individual CSV files
+                    currentTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    fileWrite(currentTime, temperature_data_arr[j], 'sensor0'+str(j+1))                
                 time.sleep(rate)
+                del temperature_data_arr[:] # flush out old data
             except KeyboardInterrupt:
                 print("Terminating ...")
                 GPIO.cleanup()
@@ -296,7 +298,8 @@ def main():
     if(connected()):
         streamer([[8],[4], [25], [24]], 2)
     else:
-        offline([[8],[4], [25], [24]], 2)
+        #offline([[8],[4], [25], [24]], 2)
+        grapher(5)
 
 if __name__ == "__main__":
     main()
