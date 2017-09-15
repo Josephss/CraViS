@@ -57,13 +57,13 @@ def grapher(rate):
                 		tempVal = trace+str(val) = Scatter(x=time_temp[val], y=time_temp[val+1], name ="Detector " + str(val+1))
                			traces_arr[val].append(tempVal)
                 
-                fig = tools.make_subplots(rows=2, cols=2)
-                fig.append_trace(trace0, 1, 1)
-                fig.append_trace(trace1, 1, 2)
-                fig.append_trace(trace2, 2, 1)
-                fig.append_trace(trace3, 2, 2)
-                plotly.offline.plot(fig, filename = "temperature" + ".html", auto_open=False, show_link=False)
+                for i in range(val/2):
+                	fig = []
+                	fig.append(traces_arr[i])
+                	plotly.offline.plot(fig, filename = "sensor" +str(i+1) + ".html", auto_open=False, show_link=False)
+                	fig[:]
                 time.sleep(rate)
+                traces_arr[:]
             except KeyboardInterrupt:
                 print("Terminating graphing ...")
                 looper = False
