@@ -51,25 +51,15 @@ def grapher(rate):
                 traces_arr = [[] for index in range(0,n/2)]
                 for val in range(n/2):
                 	if(val>=1):
-                            #tempname = "Detector" #+= str(val+1)
-                         #   tempName = "Trace" + str(val)
-                           tempName = Scatter(x=time_temp[val+val], y=time_temp[val+val+1], name = ("Detector" + str(val)))
-                           traces_arr[val].append(tempName)
-                           #print(time_temp[val+val], time_temp[val+val+1])
+                            tempName = Scatter(x=time_temp[val+val], y=time_temp[val+val+1], name = ("Detector" + str(val)))
+                            traces_arr[val].append(tempName)
                 	else:
-                            #tempName = "Trace" + str(val)
                             tempName = Scatter(x=time_temp[val], y=time_temp[val+1], name = ("Detector" + str(val)))
                             traces_arr[val].append(tempName)
-                            #print ("okay")
-                          # print(time_temp[val] ,time_temp[val+1])
-               # for j in range(0, n/2):
-                   # print(traces_arr[j])
                 
                 for i in range(0, n/2):
-                    #fig = []
-                    #fig.append(traces_arr[i])
+                    print("Writing out sensor " +str(i+1) + " data ...")
                     plotly.offline.plot(traces_arr[i], filename = ("sensor" +str(i+1) + ".html"), auto_open=False, show_link=False)
-                    #fig[:]
                     time.sleep(rate)
                 traces_arr[:]
             except KeyboardInterrupt:
