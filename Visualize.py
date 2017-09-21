@@ -5,7 +5,7 @@ import math
 import time, sched
 import SimpleHTTPServer
 import SocketServer
-
+import os
 import numpy as np
 import plotly.plotly as py
 import RPi.GPIO as GPIO
@@ -49,20 +49,28 @@ def grapher(rate):
                 time_temp = csvReader(['sensor01.csv','sensor02.csv','sensor03.csv','sensor04.csv'])[:]
                 n = len(time_temp)
                 traces_arr = [[] for index in range(0,n/2)]
-                for val in range(val/2):
+                for val in range(n/2):
                 	if(val>=1):
-                		tempVal = trace+str(val) = Scatter(x=time_temp[val+val], y=time_temp[val+val+1], name ="Detector " + str(val+1))
-                		traces_arr[val].append(tempVal)
+                            #tempname = "Detector" #+= str(val+1)
+                         #   tempName = "Trace" + str(val)
+                           tempName = Scatter(x=time_temp[val+val], y=time_temp[val+val+1], name = ("Detector" + str(val)))
+                           traces_arr[val].append(tempName)
+                           #print(time_temp[val+val], time_temp[val+val+1])
                 	else:
-                		tempVal = trace+str(val) = Scatter(x=time_temp[val], y=time_temp[val+1], name ="Detector " + str(val+1))
-               			traces_arr[val].append(tempVal)
+                            #tempName = "Trace" + str(val)
+                            tempName = Scatter(x=time_temp[val], y=time_temp[val+1], name = ("Detector" + str(val)))
+                            traces_arr[val].append(tempName)
+                            #print ("okay")
+                          # print(time_temp[val] ,time_temp[val+1])
+               # for j in range(0, n/2):
+                   # print(traces_arr[j])
                 
-                for i in range(val/2):
-                	fig = []
-                	fig.append(traces_arr[i])
-                	plotly.offline.plot(fig, filename = "sensor" +str(i+1) + ".html", auto_open=False, show_link=False)
-                	fig[:]
-                time.sleep(rate)
+                for i in range(0, n/2):
+                    #fig = []
+                    #fig.append(traces_arr[i])
+                    plotly.offline.plot(traces_arr[i], filename = ("sensor" +str(i+1) + ".html"), auto_open=False, show_link=False)
+                    #fig[:]
+                    time.sleep(rate)
                 traces_arr[:]
             except KeyboardInterrupt:
                 print("Terminating graphing ...")
