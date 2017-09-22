@@ -13,7 +13,6 @@ import RPi.GPIO as GPIO
 from plotly.graph_objs import Scatter, Layout, Figure
 from plotly import tools
 
-
 def isFloat(s):
     try: 
         float(s)
@@ -21,13 +20,13 @@ def isFloat(s):
     except ValueError:
         return False
     
-def csvReader(fileNameArr):
-    n = len(fileNameArr) 
+def csvReader(fileNameArr):    
     #Store the time and temp values in a multi-dimentional array
+    n = len(fileNameArr)
     time_temp = [[] for index in range(0,n*2)]
     for i in range(n):
-        #read in the CSV and store it in a huge array
-        f = open(fileNameArr[i])
+        completePath = os.path.join("data/",fileNameArr[i]);
+        f = open(completePath)
         csv_f = csv.reader(f)
         for row in csv_f:
             if(row != -1):
@@ -41,12 +40,12 @@ def csvReader(fileNameArr):
                         time_temp[i+1].append(float(row[1]))
     return time_temp
 
-#Graph the temperature data to an HTML file (temperature.html) using the plotly library
-def grapher(rate):
+#Graph the temperature data from each sensor to their respective HTML file (sensor*.html) using the plotly library
+def grapher(csvArr, rate):
     looper = True
     while(looper):
             try:
-                time_temp = csvReader(['sensor01.csv','sensor02.csv','sensor03.csv','sensor04.csv'])[:]
+                time_temp = csvReader(csvArr)[:]
                 n = len(time_temp)
                 traces_arr = [[] for index in range(0,n/2)]
                 for val in range(n/2):
@@ -81,7 +80,7 @@ def server():
     return
 
 def main():
-    grapher(5)
+    grapher(['sensor01.csv','sensor02.csv','sensor03.csv','sensor04.csv'], 5)
 
 if __name__ == "__main__":
     main()

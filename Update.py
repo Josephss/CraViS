@@ -7,7 +7,7 @@ import SimpleHTTPServer
 import SocketServer
 import threading
 import urllib
-
+import os.path
 import numpy as np
 import plotly.plotly as py
 import RPi.GPIO as GPIO
@@ -17,77 +17,12 @@ from plotly import tools
 from datetime import datetime
 from MAX31865 import MAX31865, MAX31865Error
 
-
-
-def isFloat(s):
-    try: 
-        float(s)
-        return True
-    except ValueError:
-        return False
-    
-def csvReader(fileNameArr):
-    n = len(fileNameArr) 
-    #Store the time and temp values in a multi-dimentional array
-    time_temp = [[] for index in range(0,n*2)]
-    for i in range(n):
-        #read in the CSV and store it in a huge array
-        f = open(fileNameArr[i])
-        csv_f = csv.reader(f)
-        for row in csv_f:
-            if(row != -1):
-                if(i>=1):
-                    time_temp[i+i].append(row[0])
-                    if(isFloat(row[1]) == True):
-                        time_temp[i+i+1].append(float(row[1]))
-                else:
-                    time_temp[i].append(row[0])
-                    if(isFloat(row[1]) == True):
-                        time_temp[i+1].append(float(row[1]))
-    return time_temp
-
-#Graph the temperature data to an HTML file (temperature.html) using the plotly library
-def grapher(rate):
-    looper = True
-    while(looper):
-            try:
-                time_temp = csvReader(['sensor01.csv','sensor02.csv','sensor03.csv','sensor04.csv'])[:]
-                trace0 = Scatter(x=time_temp[0], y=time_temp[1], name ="Detector 1")             
-                trace1 = Scatter(x=time_temp[2], y=time_temp[3], name ="Detector 2")                
-                trace2 = Scatter(x=time_temp[4], y=time_temp[5], name ="Detector 3")                
-                trace3 = Scatter(x=time_temp[6], y=time_temp[7], name ="Detector 4")
-                
-                fig = tools.make_subplots(rows=2, cols=2)
-                fig.append_trace(trace0, 1, 1)
-                fig.append_trace(trace1, 1, 2)
-                fig.append_trace(trace2, 2, 1)
-                fig.append_trace(trace3, 2, 2)
-                plotly.offline.plot(fig, filename = "temperature" + ".html", auto_open=False, show_link=False)
-                time.sleep(rate)
-            except KeyboardInterrupt:
-                print("Terminating graphing ...")
-                looper = False
-    return
-
 def fileWrite(time, data, fileName):
-    #np.savetxt('data.csv', (str(time), str(data)), delimiter=',')
-    with open(fileName + '.csv', 'a') as fl:
+    completePath = os.path.join("data/",fileName + '.csv')
+    with open(completePath, 'a') as fl:
         writer = csv.writer(fl)
         writer.writerow((time, data)) #TODO: trim temperature value to ($$.$$)
         fl.close()
-    return
-
-#Config and start the python server to host the files from the directory
-def server():
-    PORT = 8000
-    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
-    Handler.extensions_map.update({
-        '.webapp': 'application/x-web-app-manifest+json',
-    });
-    httpd = SocketServer.TCPServer(("", PORT), Handler)
-    
-    print ("Serving at port:", PORT)
-    httpd.serve_forever()
     return
 
 # Inputs an array of cx_pins locations of ADC's
@@ -257,8 +192,6 @@ def streamer(pin, rate):
                 stream_3.close()
                 stream_4.close()
                 
-                #statusCheck(temp, temp2)
-                
                 fileWrite(currentTime, temp, 'sensor01')
                 fileWrite(currentTime, temp2, 'sensor02')
                 fileWrite(currentTime, temp3, 'sensor03')
@@ -275,15 +208,6 @@ def terminate():
         if(thread.isAlive()):
             thread._Thread_stop()
 
-def statusCheck(temp1, temp2):
-    if(temp1 > 28 or temp2 > 28):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(20, GPIO.OUT)
-        GPIO.output(20, GPIO.HIGH)
-        time.sleep(1)
-        GPIO.output(20, GPIO.LOW)
-    GPIO.cleanup()
-
 #Check internet connection:     
 def connected(host='http://google.com'):
     try:
@@ -298,8 +222,7 @@ def main():
     if(connected()):
         streamer([[8],[4], [25], [24]], 2)
     else:
-        #offline([[8],[4], [25], [24]], 2)
-        grapher(5)
+        offline([[8],[4], [25], [24]], 2)
 
 if __name__ == "__main__":
     main()
