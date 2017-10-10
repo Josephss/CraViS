@@ -25,7 +25,12 @@ body.application hr {
   margin: 10px 0;
 }
 
+.date{
+  text-align: right;
+  margin: 15px 0 0;
+  color: #fbfbfb;
 
+}
 .navbar-inverse {
   background-color: #3d4a57;
   border-color: #333;
@@ -55,10 +60,11 @@ body.application hr {
   margin-bottom: 10px;
 }
 .chart-wrapper .chart-title {
+  text-align: center;
   border-bottom: 1px solid #d7d7d7;
   color: #666;
   font-size: 14px;
-  font-weight: 200;
+  font-weight: 600;
   padding: 7px 10px 4px;
 }
 
