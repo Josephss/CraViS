@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import plotly
 import csv 
 import math
 import time, sched
@@ -104,6 +103,7 @@ def main():
     try:
         Collect = Thread(target = aquire, args=(0,3,2,)) # aquire the data from the DAQ
         #Collect.setDaemon(True)
+        Collect.start()
     except KeyboardInterrupt:
         terminate() # terminate the threads       
   
