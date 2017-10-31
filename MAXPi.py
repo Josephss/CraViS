@@ -45,7 +45,7 @@ def getTemperature(cs_arr):
     return temperature
     
 # Takes in an array of MAX31865PMB1 pin 6 locations and saves their temperature output to individual CSV files
-def offline(pin, rate):
+def aquire(pin, rate):
     print("Saving data locally ... Press Ctrl + C to terminate.")
     looper = True
     while(looper):
@@ -74,7 +74,7 @@ def connected(host='http://google.com'):
         return False
     
 def main():
-    offline([[8],[4], [25], [24]], 2)
+    aquire([[8],[4], [25], [24]], 2)
 
 if __name__ == "__main__":
     main()
