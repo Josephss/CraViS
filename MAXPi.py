@@ -1,19 +1,14 @@
 #!/usr/bin/python
-import plotly
+
 import csv 
 import math
 import time, sched
-import SimpleHTTPServer
-import SocketServer
-import threading
 import urllib
 import os.path
 import numpy as np
 import plotly.plotly as py
 import RPi.GPIO as GPIO
 
-from plotly.graph_objs import Scatter, Layout, Figure
-from plotly import tools
 from datetime import datetime
 from MAX31865 import MAX31865, MAX31865Error
 
