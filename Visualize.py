@@ -7,6 +7,7 @@ import SimpleHTTPServer
 import SocketServer
 import os
 import numpy as np
+import threading
 import plotly.plotly as py
 import RPi.GPIO as GPIO
 
@@ -14,6 +15,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from plotly.graph_objs import Scatter, Layout, Figure
 from plotly import tools
+from threading import Thread
 
 class Handler(FileSystemEventHandler):  
     def process(self, event):
@@ -83,7 +85,8 @@ def server():
     return
 
 def main():
-    hasChanged()
+    Thread(target = server).start()
+    Thread(target = hasChanged).start()
 
 if __name__ == "__main__":
     main()
