@@ -28,7 +28,7 @@ Features
 
 Installation
 ------------
-Download project folder, install Plotly and execute ‘Update.py’ script file.
+Download project folder, install numpy, plotly, watchdog and execute individual py files to bring up a functionality. For example, run MAXPi.py to read from MAX31865, Visualization.py to create plots and serve them to a local browser, etc.
 
 Contribute
 ----------
