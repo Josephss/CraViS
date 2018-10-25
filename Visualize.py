@@ -19,7 +19,7 @@ from threading import Thread
 
 class Handler(FileSystemEventHandler):  
     def process(self, event):
-        print event.src_path, event.event_type
+        #print event.src_path, event.event_type
         grapher(event.src_path)
     def on_modified(self, event):
         self.process(event)
@@ -67,7 +67,7 @@ def grapher(fileName):
     trace = []   
     sensor_time_temp = csvReader(fileName)[:]
     trace.append(Scatter(x=sensor_time_temp[1], y=sensor_time_temp[2], name = ("Detector" + str(sensor_time_temp[0]))))
-    print("Writing out sensor " + str(sensor_time_temp[0]) + " data ...")
+    #print("Writing out sensor " + str(sensor_time_temp[0]) + " data ...")
     plotly.offline.plot(trace, filename = ("sensor" + str(sensor_time_temp[0]) + ".html"), auto_open=False, show_link=False)
     return
 
@@ -85,8 +85,19 @@ def server():
     return
 
 def main():
-    Thread(target = server).start()
-    Thread(target = hasChanged).start()
+    first=Thread(target = server)
+    first.daemon=True
+    first.start()
+    second=Thread(target = hasChanged)
+    second.daemon=True
+    second.start()
+    keepRunning=True
+    while(keepRunning):
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            print("\nTerminating ...")
+            keepRunning=False
 
 if __name__ == "__main__":
     main()
