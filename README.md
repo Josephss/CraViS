@@ -17,7 +17,7 @@ Look how easy it is to use:
 1)	Clone or download the entire project to your computer. 
 2)	Make sure you have all your temperature sensors are correctly connected to the MAX31865PMB1 board.
 3)	Install the Plotly library. 
-4)	Run ‘Update.py’ script from the terminal and go to the localhost address.
+4)	Run ‘MAXPi.py’ script from the terminal and open http://localhost:8000 in a browser.
     
 
 Features
@@ -28,7 +28,9 @@ Features
 
 Installation
 ------------
-Download project folder, install numpy, plotly, watchdog and execute individual py files to bring up a functionality. For example, run MAXPi.py to read from MAX31865, Visualization.py to create plots and serve them to a local browser, etc.
+- Download project
+- install the following python packages: numpy, plotly, watchdog
+- download [plotly.min.js](https://github.com/plotly/plotly.js/blob/master/dist/plotly.min.js) and put it in a place prompted when run Visualize.py without it
 
 Contribute
 ----------
