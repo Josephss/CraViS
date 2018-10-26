@@ -33,15 +33,6 @@ def hasChanged():
     observer.schedule(event_handler, path="data/", recursive=False)
     observer.start()
     
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Terminating  ...")
-        observer.stop()
-    observer.join()
-    
-    
 def isFloat(s):
     try: 
         float(s)
